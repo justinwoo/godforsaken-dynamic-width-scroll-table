@@ -1,0 +1,21 @@
+{
+  "name": "godforsaken-dynamic-width-scroll-table",
+  "version": "0.1.0",
+  "description": "Fixed scroll element for React",
+  "main": "lib/godforsaken-dynamic-width-scroll-table.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "presetup": "cd example && npm install",
+    "setup": "ln -sf example/node_modules node_modules"
+  },
+  "peerDependencies": {
+    "react": "^0.13.2",
+    "rx": "^2.5.2",
+    "object-assign": "^2.0.0"
+  },
+  "author": "Justin Woo",
+  "license": "MIT"
+}
