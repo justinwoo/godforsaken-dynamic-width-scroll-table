@@ -5,32 +5,26 @@ var assign = require('object-assign');
 
 var FixedScrollTable = require('../../lib/godforsaken-dynamic-width-scroll-table.js');
 
-function getColumnWidths(rowWidth, columnStyles) {
-  var computation = columnStyles.reduce(function (agg, style) {
-    if (style.width) {
-      agg.remainingWidth -= style.width;
+function getColumnWidths(rowWidth, columnWidths) {
+  var computation = columnWidths.reduce(function (agg, width) {
+    if (typeof width === 'number') {
+      agg.remainingWidth -= width;
       agg.customWidthColumns -= 1;
     }
     return agg;
   }, {
-    autoSizeColumns: columnStyles.length,
+    autoSizeColumns: columnWidths.length,
     remainingWidth: rowWidth
   });
 
   var standardWidth = computation.remainingWidth / computation.autoSizeColumns;
 
-  return columnStyles.map(function (style) {
-    if (style.width) {
-      return style.width;
+  return columnWidths.map(function (width) {
+    if (width) {
+      return width;
     } else {
       return standardWidth;
     }
-  });
-}
-
-function getColumnStyles(columnStyles, columnWidths) {
-  return columnStyles.map(function (style, i) {
-    return assign({}, style, {width: columnWidths[i]});
   });
 }
 
@@ -38,11 +32,11 @@ var ExampleTable = React.createClass({
 
   getInitialState: function () {
     return {
-      columnStyles: [{
-        width: 250
-      }, {
-      }, {
-      }]
+      columnWidths: [
+        250,
+        null,
+        null
+      ]
     };
   },
 
@@ -53,25 +47,23 @@ var ExampleTable = React.createClass({
       width: '100%',
       borderBottom: '1px solid grey'
     };
-    var columnWidths = getColumnWidths(rowWidth, this.state.columnStyles);
-    var columnStyles = getColumnStyles(this.state.columnStyles, columnWidths);
+    var columnWidths = getColumnWidths(rowWidth, this.state.columnWidths);
     return (
       <tr key={keyIndex} style={rowStyle}>
-        <td style={columnStyles[0]}>{itemIndex}</td>
-        <td style={columnStyles[1]}>5 * itemIndex === {5 * itemIndex}</td>
-        <td style={columnStyles[2]}>{Math.random() * 10000}</td>
+        <td style={{width: columnWidths[0]}}>{itemIndex}</td>
+        <td style={{width: columnWidths[1]}}>5 * itemIndex === {5 * itemIndex}</td>
+        <td style={{width: columnWidths[2]}}>{Math.random() * 10000}</td>
       </tr>
     );
   },
 
   getHeader: function (rowWidth) {
-    var columnWidths = getColumnWidths(rowWidth, this.state.columnStyles);
-    var columnStyles = getColumnStyles(this.state.columnStyles, columnWidths);
+    var columnWidths = getColumnWidths(rowWidth, this.state.columnWidths);
     return (
       <tr>
-        <th style={columnStyles[0]}>Id</th>
-        <th style={columnStyles[1]}>Content</th>
-        <th style={columnStyles[2]}>SDVXCf</th>
+        <th style={{width: columnWidths[0]}}>Id</th>
+        <th style={{width: columnWidths[1]}}>Content</th>
+        <th style={{width: columnWidths[2]}}>SDVXCf</th>
       </tr>
     );
   },
