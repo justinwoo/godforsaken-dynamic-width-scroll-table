@@ -4,7 +4,6 @@ var Rx = require('rx');
 var assign = require('object-assign');
 
 var FixedScrollTable = require('../../lib/godforsaken-dynamic-width-scroll-table');
-var getColumnWidths = require('../../lib/get-column-widths');
 
 var ExampleTable = React.createClass({
 
@@ -18,30 +17,28 @@ var ExampleTable = React.createClass({
     };
   },
 
-  getRow: function (itemIndex, keyIndex, top, rowWidth) {
+  getRow: function (itemIndex, keyIndex, top, computedColumnWidths, rowWidth) {
     var rowStyle = {
       position: 'absolute',
       top: top,
       width: '100%',
       borderBottom: '1px solid grey'
     };
-    var columnWidths = getColumnWidths(rowWidth, this.state.columnWidths);
     return (
       <tr key={keyIndex} style={rowStyle}>
-        <td style={{width: columnWidths[0]}}>{itemIndex}</td>
-        <td style={{width: columnWidths[1]}}>5 * itemIndex === {5 * itemIndex}</td>
-        <td style={{width: columnWidths[2]}}>{Math.random() * 10000}</td>
+        <td style={{width: computedColumnWidths[0]}}>{itemIndex}</td>
+        <td style={{width: computedColumnWidths[1]}}>5 * itemIndex === {5 * itemIndex}</td>
+        <td style={{width: computedColumnWidths[2]}}>{Math.random() * 10000}</td>
       </tr>
     );
   },
 
-  getHeader: function (rowWidth) {
-    var columnWidths = getColumnWidths(rowWidth, this.state.columnWidths);
+  getHeader: function (computedColumnWidths, rowWidth) {
     return (
       <tr>
-        <th style={{width: columnWidths[0]}}>Id</th>
-        <th style={{width: columnWidths[1]}}>Content</th>
-        <th style={{width: columnWidths[2]}}>SDVXCf</th>
+        <th style={{width: computedColumnWidths[0]}}>Id</th>
+        <th style={{width: computedColumnWidths[1]}}>Content</th>
+        <th style={{width: computedColumnWidths[2]}}>SDVXCf</th>
       </tr>
     );
   },
@@ -54,6 +51,7 @@ var ExampleTable = React.createClass({
         rowCount={10000}
         rowGetter={this.getRow}
         headerGetter={this.getHeader}
+        columnWidths={this.state.columnWidths}
       />
     );
   }
